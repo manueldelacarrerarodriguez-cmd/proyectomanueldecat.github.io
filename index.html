@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diccionario & Glosario Interno - Decathlon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --decathlon-blue: #0082C3;
+      --decathlon-dark-blue: #000091;
+      --decathlon-light-blue: #E6F4FA;
+      --bg-gray: #F4F6F8;
+      --card-bg: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--decathlon-blue), var(--decathlon-dark-blue));
+      color: white;
+      padding: 2.5rem 1.5rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo-badge {
+      background-color: white;
+      color: var(--decathlon-blue);
+      font-weight: 800;
+      font-size: 1.2rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: #FFEA00;
+      color: #000;
+    }
+    .btn-primary:hover { background-color: #E6D400; }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(4px);
+    }
+    .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.3); }
+
+    .search-section {
+      max-width: 1200px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      font-size: 1rem;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--decathlon-blue);
+      box-shadow: 0 0 0 3px rgba(0, 130, 195, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+
+    .categories-bar {
+      max-width: 1200px;
+      margin: 1.2rem auto 0;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.6rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .category-btn {
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .category-btn:hover, .category-btn.active {
+      background-color: var(--decathlon-blue);
+      color: white;
+      border-color: var(--decathlon-blue);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .dictionary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background-color: var(--decathlon-light-blue);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-body {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--decathlon-dark-blue);
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge-secciones { background-color: #E2F5EA; color: #0D8A43; }
+    .badge-diccionario { background-color: #FFF3D6; color: #B45309; }
+    .badge-tpv { background-color: #E0F2FE; color: #0369A1; }
+    .badge-logistica { background-color: #F3E8FF; color: #6B21A8; }
+
+    .session-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--decathlon-blue);
+      background-color: var(--decathlon-light-blue);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.8rem;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .card-def {
+      font-size: 0.92rem;
+      color: var(--text-main);
+      flex-grow: 1;
+      margin-bottom: 1rem;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding-top: 0.8rem;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .action-icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.3rem;
+      border-radius: 4px;
+    }
+    .action-icon-btn:hover { color: var(--decathlon-blue); background-color: var(--bg-gray); }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-md);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      color: var(--decathlon-dark-blue);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 1.5rem 1rem; }
+      h1 { font-size: 1.4rem; }
+      .header-actions { width: 100%; }
+      .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="top-bar">
+        <div>
+          <span class="logo-badge">Decathlon</span>
+          <h1 style="margin-top: 0.4rem;">📖 Diccionario de Tienda</h1>
+          <p class="subtitle">Conceptos, siglas, marcas y sesiones explicadas para el equipo</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openAddModal()">➕ Añadir Término</button>
+          <button class="btn btn-secondary" onclick="openDataModal()">⚙️ Datos / Ayuda</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="search-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar concepto, sigla, marca o definición..." oninput="filterTerms()">
+    </div>
+  </div>
+
+  <div class="categories-bar" id="categoriesContainer"></div>
+
+  <main class="container">
+    <div class="results-count" id="resultsCount">Cargando términos...</div>
+    <div class="dictionary-grid" id="dictionaryGrid"></div>
+  </main>
+
+  <!-- Modal para Añadir Término -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal">
+      <h2 class="modal-title">Añadir Nuevo Término</h2>
+      <form id="addTermForm" onsubmit="saveTerm(event)">
+        <div class="form-group">
+          <label for="termInput">Concepto / Marca / Sigla *</label>
+          <input type="text" id="termInput" required placeholder="Ej: Quechua, RFID, Facing...">
+        </div>
+        
+        <div class="form-group">
+          <label for="categoryInput">Categoría *</label>
+          <select id="categoryInput" required onchange="toggleSessionSelect()">
+            <option value="Secciones">Secciones (Marcas y Deportes)</option>
+            <option value="Diccionario General Tienda">Diccionario General Tienda</option>
+            <option value="Tecnología / TPV">Tecnología / TPV</option>
+            <option value="Operaciones / Logística">Operaciones / Logística</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="sessionGroup">
+          <label for="sessionInput">Sesión Correspondiente</label>
+          <select id="sessionInput">
+            <option value="Sesión Montaña">Sesión Montaña</option>
+            <option value="Sesión Naturaleza y Colectivos">Sesión Naturaleza y Colectivos</option>
+            <option value="Sesión Agua y Nieve">Sesión Agua y Nieve</option>
+            <option value="Sesión Ciclismo">Sesión Ciclismo</option>
+            <option value="Sesión Fitness">Sesión Fitness</option>
+            <option value="Sesión Running y Kids">Sesión Running y Kids</option>
+            <option value="Sesión Raquetas">Sesión Raquetas</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="imageInput">URL de la Imagen (Opcional)</label>
+          <input type="url" id="imageInput" placeholder="https://ejemplo.com/imagen.jpg">
+        </div>
+
+        <div class="form-group">
+          <label for="definitionInput">Definición / Explicación *</label>
+          <textarea id="definitionInput" required placeholder="Explica qué significa o para qué sirve en tienda..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" style="color: var(--text-main);" onclick="closeAddModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Término</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Datos / Ayuda -->
+  <div class="modal-overlay" id="dataModal">
+    <div class="modal">
+      <h2 class="modal-title">Gestión de Datos & Despliegue</h2>
+      <p style="font-size:0.9rem; margin-bottom: 1rem; color: var(--text-muted);">
+        Esta web funciona 100% en tu navegador sin costes. Puedes exportar tus cambios para compartirlos o publicar la web gratis.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+        <button class="btn btn-secondary" style="background: var(--decathlon-blue); color: white;" onclick="exportData()">📥 Exportar Copia de Datos (JSON)</button>
+        <button class="btn btn-secondary" style="background: var(--bg-gray); color: var(--text-main); border: 1px solid var(--border-color);" onclick="document.getElementById('importFile').click()">📤 Importar Copia de Datos (JSON)</button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
+
+      <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--decathlon-dark-blue);">🚀 ¿Cómo publicar la web GRATIS?</h3>
+      <ol style="font-size: 0.85rem; padding-left: 1.2rem; color: var(--text-main); display: flex; flex-direction: column; gap: 0.4rem;">
+        <li>Guarda este código en tu ordenador como <code>index.html</code>.</li>
+        <li>Entra en <strong>app.netlify.com/drop</strong> (no requiere tarjeta de crédito).</li>
+        <li>Arrastra el archivo <code>index.html</code> a la pantalla.</li>
+        <li>¡Listo! Te dará un enlace web gratuito al instante para enviárselo a tus compañeros.</li>
+      </ol>
+
+      <div class="modal-actions" style="margin-top: 1.5rem;">
+        <button class="btn btn-primary" onclick="closeDataModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Base de datos inicial con Categorías, Sesiones e Imágenes
+    const INITIAL_GLOSSARY = [
+      {
+        id: 1,
+        term: "Quechua",
+        category: "Secciones",
+        session: "Sesión Montaña",
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca principal de Decathlon especializada en material de senderismo, camping y montaña."
+      },
+      {
+        id: 2,
+        term: "Simond",
+        category: "Secciones",
+        session: "Sesión Montaña",
+        image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca técnica dedicada a la escalada, alpinismo y deportes de alta montaña."
+      },
+      {
+        id: 3,
+        term: "Solognac",
+        category: "Secciones",
+        session: "Sesión Naturaleza y Colectivos",
+        image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca orientada a la observación de la naturaleza, caza y actividades al aire libre."
+      },
+      {
+        id: 4,
+        term: "Kipsta",
+        category: "Secciones",
+        session: "Sesión Naturaleza y Colectivos",
+        image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca dedicada a los deportes colectivos de equipo (fútbol, baloncesto, balonmano, etc.)."
+      },
+      {
+        id: 5,
+        term: "Tribord",
+        category: "Secciones",
+        session: "Sesión Agua y Nieve",
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca diseñada para la navegación, vela y deportes en la superficie del agua."
+      },
+      {
+        id: 6,
+        term: "Wedze",
+        category: "Secciones",
+        session: "Sesión Agua y Nieve",
+        image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=600&q=80",
+        definition: "Especialista en esquí, snowboard y ropa térmica para deportes de nieve."
+      },
+      {
+        id: 7,
+        term: "Rockrider",
+        category: "Secciones",
+        session: "Sesión Ciclismo",
+        image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca de bicicletas y equipamiento técnico para ciclismo de montaña (MTB / BTT)."
+      },
+      {
+        id: 8,
+        term: "Domyos",
+        category: "Secciones",
+        session: "Sesión Fitness",
+        image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca oficial para el gimnasio, musculación, fitness, yoga y danza."
+      },
+      {
+        id: 9,
+        term: "Kiprun",
+        category: "Secciones",
+        session: "Sesión Running y Kids",
+        image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca técnica de alto rendimiento para atletismo y running intensivo."
+      },
+      {
+        id: 10,
+        term: "Artengo",
+        category: "Secciones",
+        session: "Sesión Raquetas",
+        image: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80",
+        definition: "Marca dedicada a los deportes de raqueta como el tenis, pádel y bádminton."
+      },
+      {
+        id: 11,
+        term: "Facing",
+        category: "Diccionario General Tienda",
+        definition: "Colocar todos los productos alineados en el borde frontal de la balda o lineal para ofrecer una imagen limpia e impecable al cliente."
+      },
+      {
+        id: 12,
+        term: "Cabecera de Pasillo",
+        category: "Diccionario General Tienda",
+        definition: "Espacio de exhibición destacado al inicio de los pasillos donde se ubican las promociones o productos estrella."
+      },
+      {
+        id: 13,
+        term: "RFID",
+        category: "Tecnología / TPV",
+        definition: "Radio Frequency Identification. Etiqueta inteligente que permite leer automáticamente los datos de los productos en caja sin escanear el código de barras."
+      },
+      {
+        id: 14,
+        term: "TPV",
+        category: "Tecnología / TPV",
+        definition: "Terminal Punto de Venta. Equipo informático y de cobro ubicado en la línea de cajas."
+      },
+      {
+        id: 15,
+        term: "Pega",
+        category: "Operaciones / Logística",
+        definition: "Trabajo diario en el que se repone la mercancía procedente de los camiones de recepción hacia las estanterías de la tienda."
+      }
+    ];
+
+    let glossary = [];
+    let activeCategory = "Todas";
+
+    function init() {
+      const stored = localStorage.getItem('decathlon_glossary');
+      if (stored) {
+        try { glossary = JSON.parse(stored); } catch(e) { glossary = INITIAL_GLOSSARY; }
+      } else {
+        glossary = INITIAL_GLOSSARY;
+        saveToLocalStorage();
+      }
+      renderCategories();
+      renderTerms();
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('decathlon_glossary', JSON.stringify(glossary));
+    }
+
+    function renderCategories() {
+      const categories = [
+        "Todas",
+        "Secciones",
+        "Diccionario General Tienda",
+        "Tecnología / TPV",
+        "Operaciones / Logística"
+      ];
+
+      const container = document.getElementById('categoriesContainer');
+      container.innerHTML = categories.map(cat => `
+        <button class="category-btn ${cat === activeCategory ? 'active' : ''}" onclick="selectCategory('${cat}')">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      filterTerms();
+    }
+
+    function renderTerms(filteredList = null) {
+      const listToRender = filteredList || getFilteredTerms();
+      const grid = document.getElementById('dictionaryGrid');
+      const countEl = document.getElementById('resultsCount');
+
+      countEl.textContent = `Mostrando ${listToRender.length} término(s)`;
+
+      if (listToRender.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h3>No se encontraron resultados</h3>
+            <p>Prueba con otros términos de búsqueda o añade una nueva palabra.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = listToRender.map(item => {
+        let badgeClass = 'badge-diccionario';
+        if (item.category === 'Secciones') badgeClass = 'badge-secciones';
+        if (item.category === 'Tecnología / TPV') badgeClass = 'badge-tpv';
+        if (item.category === 'Operaciones / Logística') badgeClass = 'badge-logistica';
+
+        const imageHtml = item.image 
+          ? `<img src="${item.image}" class="card-img" alt="${item.term}" onerror="this.style.display='none'">` 
+          : '';
+
+        const sessionHtml = item.session ? `<div class="session-tag">🏷️ ${item.session}</div>` : '';
+
+        return `
+          <article class="card">
+            ${imageHtml}
+            <div class="card-body">
+              <div class="card-header-info">
+                <h3 class="card-title">${item.term}</h3>
+                <span class="badge ${badgeClass}">${item.category}</span>
+              </div>
+              ${sessionHtml}
+              <p class="card-def">${item.definition}</p>
+              <div class="card-footer">
+                <button class="action-icon-btn" title="Eliminar" onclick="deleteTerm(${item.id})">🗑️</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function getFilteredTerms() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      return glossary.filter(item => {
+        const matchesCategory = activeCategory === "Todas" || item.category === activeCategory;
+        const matchesQuery = 
+          item.term.toLowerCase().includes(query) ||
+          item.definition.toLowerCase().includes(query) ||
+          (item.session && item.session.toLowerCase().includes(query));
+        return matchesCategory && matchesQuery;
+      });
+    }
+
+    function filterTerms() {
+      renderTerms(getFilteredTerms());
+    }
+
+    function openAddModal() {
+      document.getElementById('addModal').classList.add('active');
+      toggleSessionSelect();
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').classList.remove('active');
+      document.getElementById('addTermForm').reset();
+    }
+
+    function toggleSessionSelect() {
+      const catVal = document.getElementById('categoryInput').value;
+      const sessionGroup = document.getElementById('sessionGroup');
+      sessionGroup.style.display = (catVal === 'Secciones') ? 'block' : 'none';
+    }
+
+    function saveTerm(e) {
+      e.preventDefault();
+      const term = document.getElementById('termInput').value.trim();
+      const category = document.getElementById('categoryInput').value;
+      const session = (category === 'Secciones') ? document.getElementById('sessionInput').value : null;
+      const image = document.getElementById('imageInput').value.trim();
+      const definition = document.getElementById('definitionInput').value.trim();
+
+      const newEntry = {
+        id: Date.now(),
+        term,
+        category,
+        session,
+        image: image || null,
+        definition
+      };
+
+      glossary.unshift(newEntry);
+      saveToLocalStorage();
+      closeAddModal();
+      renderTerms();
+    }
+
+    function deleteTerm(id) {
+      if (confirm("¿Seguro que quieres borrar este término?")) {
+        glossary = glossary.filter(item => item.id !== id);
+        saveToLocalStorage();
+        renderTerms();
+      }
+    }
+
+    function openDataModal() { document.getElementById('dataModal').classList.add('active'); }
+    function closeDataModal() { document.getElementById('dataModal').classList.remove('active'); }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(glossary, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "diccionario_decathlon.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const importedData = JSON.parse(event.target.result);
+          if (Array.isArray(importedData)) {
+            glossary = importedData;
+            saveToLocalStorage();
+            renderTerms();
+            alert("¡Datos importados con éxito!");
+            closeDataModal();
+          } else {
+            alert("El archivo JSON no tiene el formato correcto.");
+          }
+        } catch (err) {
+          alert("Error al leer el archivo JSON.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
